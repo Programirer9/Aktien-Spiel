@@ -40,17 +40,23 @@ function ladeAktienAuswahl() {
     });
 }
 
+function zeigeRechnung(aktie, anzahl, gesamtKosten) {
+    const rechnungText = `Rechnung:\nAktie: ${aktie.name}\nAnzahl: ${anzahl}\nPreis pro Aktie: ${aktie.preis.toFixed(2)} €\nGesamtkosten: ${gesamtKosten.toFixed(2)} €`;
+    alert(rechnungText);
+}
+
 document.getElementById('kaufen').addEventListener('click', function() {
     const aktieName = document.getElementById('aktie-auswahl').value;
     const anzahl = parseInt(document.getElementById('anzahl').value);
     const aktie = aktien.find(a => a.name === aktieName);
     
     const gebuehr = 0.02 * (aktie.preis * anzahl); // 2% Kaufgebühr
+    const gesamtKosten = aktie.preis * anzahl + gebuehr;
 
-    if (geld >= (aktie.preis * anzahl + gebuehr)) {
-        geld -= (aktie.preis * anzahl + gebuehr);
+    if (geld >= gesamtKosten) {
+        geld -= gesamtKosten;
         aktie.besitz += anzahl;
-        alert(`Du hast ${anzahl} Aktien von ${aktie.name} gekauft!`);
+        zeigeRechnung(aktie, anzahl, gesamtKosten);
         aktualisiereNachricht();
         aktualisiereAktienListe();
     } else {
@@ -64,11 +70,12 @@ document.getElementById('verkaufen').addEventListener('click', function() {
     const aktie = aktien.find(a => a.name === aktieName);
     
     const gebuehr = 0.02 * (aktie.preis * anzahl); // 2% Verkaufsgebühr
+    const gesamtEinnahmen = aktie.preis * anzahl - gebuehr;
 
     if (aktie.besitz >= anzahl) {
-        geld += (aktie.preis * anzahl - gebuehr);
+        geld += gesamtEinnahmen;
         aktie.besitz -= anzahl;
-        alert(`Du hast ${anzahl} Aktien von ${aktie.name} verkauft!`);
+        alert(`Du hast ${anzahl} Aktien von ${aktie.name} verkauft! Einnahmen: ${gesamtEinnahmen.toFixed(2)} €`);
         aktualisiereNachricht();
         aktualisiereAktienListe();
     } else {
