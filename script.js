@@ -11,8 +11,7 @@ let krisenAktiv = false; // Flag für Krisen
 let berichtGekauft = false; // Flag für den Bericht
 
 function aktualisiereNachricht() {
-    document.getElementById('nachricht').textContent = 
-        `Geld: ${geld} €`;
+    document.getElementById('nachricht').textContent = `Geld: ${geld} €`;
 }
 
 function aktualisiereAktienListe() {
@@ -75,7 +74,9 @@ document.getElementById('bericht').addEventListener('click', function() {
     if (geld >= 50) {
         geld -= 50;
         berichtGekauft = true;
-        alert("Bericht gekauft! Die Aktienpreise könnten bald steigen oder fallen.");
+        const berichtText = "Der Bericht zeigt, dass die Tech-Aktien in den kommenden Wochen wahrscheinlich steigen werden, während Gesundheitsaktien volatil bleiben könnten.";
+        document.getElementById('bericht-anzeige').textContent = berichtText;
+        alert("Bericht gekauft! Schau dir den Bericht an.");
         aktualisiereNachricht();
     } else {
         alert("Nicht genug Geld für den Bericht!");
