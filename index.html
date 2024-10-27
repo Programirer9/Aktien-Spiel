@@ -11,10 +11,15 @@
         <h1>Aktienspiel</h1>
         <div id="nachricht" class="message"></div>
         
+        <select id="aktie-auswahl">
+            <!-- Optionen werden hier über JavaScript hinzugefügt -->
+        </select>
+        <input type="number" id="anzahl" placeholder="Anzahl Aktien" min="1" value="1">
         <div class="controls">
-            <input type="number" id="anzahl" placeholder="Anzahl Aktien" min="1" value="1">
             <button id="kaufen">Aktien kaufen</button>
             <button id="verkaufen">Aktien verkaufen</button>
+            <button id="bericht">Bericht kaufen (50 €)</button>
+            <button id="bank-leihen">Geld von der Bank leihen (100 €)</button>
         </div>
 
         <table>
@@ -31,4 +36,3 @@
     <script src="script.js"></script>
 </body>
 </html>
-
