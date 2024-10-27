@@ -27,6 +27,12 @@ h1 {
     margin-bottom: 20px;
 }
 
+input {
+    padding: 10px;
+    width: 100px;
+    margin-right: 10px;
+}
+
 button {
     padding: 10px 15px;
     margin: 5px;
@@ -42,9 +48,18 @@ button:hover {
     background-color: #45a049;
 }
 
-.history {
+table {
+    width: 100%;
     margin-top: 20px;
-    font-size: 1em;
-    border-top: 1px solid #ddd;
-    padding-top: 10px;
+    border-collapse: collapse;
+}
+
+th, td {
+    padding: 10px;
+    border: 1px solid #ddd;
+}
+
+th {
+    background-color: #4CAF50;
+    color: white;
 }
