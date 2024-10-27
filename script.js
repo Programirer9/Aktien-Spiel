@@ -1,17 +1,19 @@
 let geld = 1000; // Höheres Anfangsbudget
+let geliehen = 0; // Geliehenes Geld
 let aktien = [
-    { name: "Tech Corp", preis: 50, besitz: 0 },
-    { name: "Health Inc.", preis: 75, besitz: 0 },
-    { name: "Finance Ltd.", preis: 100, besitz: 0 },
-    { name: "Energy Co.", preis: 60, besitz: 0 },
-    { name: "Auto GmbH", preis: 80, besitz: 0 }
+    { name: "Tech Corp", preis: 50, besitz: 0, dividende: Math.random() * 0.06 }, // Zufällige Dividende zwischen 0% und 6%
+    { name: "Health Inc.", preis: 75, besitz: 0, dividende: Math.random() * 0.06 },
+    { name: "Finance Ltd.", preis: 100, besitz: 0, dividende: Math.random() * 0.06 },
+    { name: "Energy Co.", preis: 60, besitz: 0, dividende: Math.random() * 0.06 },
+    { name: "Auto GmbH", preis: 80, besitz: 0, dividende: Math.random() * 0.06 }
 ];
 
 let krisenAktiv = false; // Flag für Krisen
 let berichtGekauft = false; // Flag für den Bericht
 
 function aktualisiereNachricht() {
-    document.getElementById('nachricht').textContent = `Geld: ${geld} €`;
+    document.getElementById('nachricht').textContent = 
+        `Geld: ${geld} € | Geliehen: ${geliehen} €`;
 }
 
 function aktualisiereAktienListe() {
@@ -43,8 +45,10 @@ document.getElementById('kaufen').addEventListener('click', function() {
     const anzahl = parseInt(document.getElementById('anzahl').value);
     const aktie = aktien.find(a => a.name === aktieName);
     
-    if (geld >= aktie.preis * anzahl) {
-        geld -= aktie.preis * anzahl;
+    const gebuehr = 0.02 * (aktie.preis * anzahl); // 2% Kaufgebühr
+
+    if (geld >= (aktie.preis * anzahl + gebuehr)) {
+        geld -= (aktie.preis * anzahl + gebuehr);
         aktie.besitz += anzahl;
         alert(`Du hast ${anzahl} Aktien von ${aktie.name} gekauft!`);
         aktualisiereNachricht();
@@ -59,8 +63,10 @@ document.getElementById('verkaufen').addEventListener('click', function() {
     const anzahl = parseInt(document.getElementById('anzahl').value);
     const aktie = aktien.find(a => a.name === aktieName);
     
+    const gebuehr = 0.02 * (aktie.preis * anzahl); // 2% Verkaufsgebühr
+
     if (aktie.besitz >= anzahl) {
-        geld += aktie.preis * anzahl;
+        geld += (aktie.preis * anzahl - gebuehr);
         aktie.besitz -= anzahl;
         alert(`Du hast ${anzahl} Aktien von ${aktie.name} verkauft!`);
         aktualisiereNachricht();
@@ -84,10 +90,25 @@ document.getElementById('bericht').addEventListener('click', function() {
 });
 
 document.getElementById('bank-leihen').addEventListener('click', function() {
-    geld += 100;
-    alert("Du hast 100 € von der Bank geliehen.");
+    if (geliehen === 0) {
+        geld += 100;
+        geliehen += 100;
+        alert("Du hast 100 € von der Bank geliehen.");
+        setTimeout(zurueckzahlen, 30000); // Rückzahlung nach 30 Sekunden
+    } else {
+        alert("Du hast bereits Geld geliehen!");
+    }
     aktualisiereNachricht();
 });
+
+function zurueckzahlen() {
+    if (geliehen > 0) {
+        geld -= 100; // Rückzahlung von 100 €
+        geliehen = 0; // Geld gilt als zurückgezahlt
+        alert("Du hast 100 € an die Bank zurückgezahlt.");
+        aktualisiereNachricht();
+    }
+}
 
 function simuliereKrise() {
     krisenAktiv = true;
@@ -100,6 +121,20 @@ function simuliereKrise() {
 
 // Simulation einer Krise (z.B. nach einer bestimmten Zeit)
 setTimeout(simuliereKrise, 30000); // 30 Sekunden nach dem Start
+
+// Dividenden am Ende des Spiels (oder nach einer bestimmten Zeit)
+function verteileDividende() {
+    aktien.forEach(aktie => {
+        if (aktie.besitz > 0) {
+            const dividende = aktie.besitz * aktie.preis * aktie.dividende; // Dividende basierend auf dem Besitz und der Dividende
+            geld += dividende; // Dividende zum Geld hinzufügen
+            alert(`Du hast eine Dividende von ${dividende.toFixed(2)} € für ${aktie.name} erhalten!`);
+        }
+    });
+}
+
+// Dividendenverteilung nach 60 Sekunden (oder zu einem anderen Zeitpunkt)
+setTimeout(verteileDividende, 60000); // 60 Sekunden nach dem Start
 
 // Initiale Anzeige
 ladeAktienAuswahl();
