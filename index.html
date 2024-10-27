@@ -10,12 +10,25 @@
     <div class="container">
         <h1>Aktienspiel</h1>
         <div id="nachricht" class="message"></div>
+        
         <div class="controls">
-            <button id="kaufen">Aktie kaufen</button>
-            <button id="verkaufen">Aktie verkaufen</button>
+            <input type="number" id="anzahl" placeholder="Anzahl Aktien" min="1" value="1">
+            <button id="kaufen">Aktien kaufen</button>
+            <button id="verkaufen">Aktien verkaufen</button>
         </div>
-        <div id="historie" class="history"></div>
+
+        <table>
+            <thead>
+                <tr>
+                    <th>Aktie</th>
+                    <th>Preis (€)</th>
+                    <th>Besitz</th>
+                </tr>
+            </thead>
+            <tbody id="aktien-liste"></tbody>
+        </table>
     </div>
     <script src="script.js"></script>
 </body>
 </html>
+
