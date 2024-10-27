@@ -1,7 +1,7 @@
 let geld = 1000; // Höheres Anfangsbudget
 let geliehen = 0; // Geliehenes Geld
 let aktien = [
-    { name: "Tech Corp", preis: 50, besitz: 0, dividende: Math.random() * 0.06 }, // Zufällige Dividende zwischen 0% und 6%
+    { name: "Tech Corp", preis: 50, besitz: 0, dividende: Math.random() * 0.06 },
     { name: "Health Inc.", preis: 75, besitz: 0, dividende: Math.random() * 0.06 },
     { name: "Finance Ltd.", preis: 100, besitz: 0, dividende: Math.random() * 0.06 },
     { name: "Energy Co.", preis: 60, besitz: 0, dividende: Math.random() * 0.06 },
@@ -23,7 +23,7 @@ function aktualisiereAktienListe() {
         aktienListe.innerHTML += `
             <tr>
                 <td>${aktie.name}</td>
-                <td>${aktie.preis} €</td>
+                <td>${aktie.preis.toFixed(2)} €</td>
                 <td>${aktie.besitz}</td>
             </tr>
         `;
@@ -80,7 +80,7 @@ document.getElementById('bericht').addEventListener('click', function() {
     if (geld >= 50) {
         geld -= 50;
         berichtGekauft = true;
-        const berichtText = "Der Bericht zeigt, dass die Tech-Aktien in den kommenden Wochen wahrscheinlich steigen werden, während Gesundheitsaktien volatil bleiben könnten.";
+        const berichtText = "Der Bericht zeigt, dass Tech-Aktien aufgrund neuer Technologien voraussichtlich um 5% steigen könnten, während Gesundheitsaktien volatil bleiben. Finance Ltd. könnte von neuen Regelungen profitieren.";
         document.getElementById('bericht-anzeige').textContent = berichtText;
         alert("Bericht gekauft! Schau dir den Bericht an.");
         aktualisiereNachricht();
@@ -121,6 +121,18 @@ function simuliereKrise() {
 
 // Simulation einer Krise (z.B. nach einer bestimmten Zeit)
 setTimeout(simuliereKrise, 30000); // 30 Sekunden nach dem Start
+
+// Aktienpreise regelmäßig aktualisieren
+function aktualisiereAktienpreise() {
+    aktien.forEach(aktie => {
+        const aenderung = (Math.random() < 0.5 ? -1 : 1) * (Math.random() * 10); // Zufällige Änderung zwischen -10 und +10
+        aktie.preis = Math.max(0, aktie.preis + aenderung); // Preis nicht negativ werden lassen
+    });
+    aktualisiereAktienListe();
+}
+
+// Aktienpreise alle 30 Sekunden aktualisieren
+setInterval(aktualisiereAktienpreise, 30000);
 
 // Dividenden am Ende des Spiels (oder nach einer bestimmten Zeit)
 function verteileDividende() {
