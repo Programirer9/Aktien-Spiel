@@ -63,3 +63,9 @@ th {
     background-color: #4CAF50;
     color: white;
 }
+.bericht {
+    margin-top: 20px;
+    padding: 10px;
+    border: 1px solid #ddd;
+    background-color: #f9f9f9;
+}
