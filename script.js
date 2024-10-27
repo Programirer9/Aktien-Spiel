@@ -1,49 +1,60 @@
-let geld = 100; // Anfangsbudget
-let aktienBesitz = 0; // Anzahl der Aktien
-let aktienPreis = 10; // Startpreis pro Aktie
-let aktionHistory = []; // Historie der Transaktionen
+let geld = 1000; // Höheres Anfangsbudget
+let aktien = [
+    { name: "Tech Corp", preis: 50, besitz: 0 },
+    { name: "Health Inc.", preis: 75, besitz: 0 },
+    { name: "Finance Ltd.", preis: 100, besitz: 0 }
+];
 
 function aktualisiereNachricht() {
     document.getElementById('nachricht').textContent = 
-        `Geld: ${geld} € | Aktien: ${aktienBesitz} | Preis pro Aktie: ${aktienPreis} €`;
+        `Geld: ${geld} €`;
 }
 
-function aktualisiereHistorie(transaktion) {
-    aktionHistory.push(transaktion);
-    const historieDiv = document.getElementById('historie');
-    historieDiv.innerHTML = '<h3>Transaktionshistorie:</h3>';
-    aktionHistory.forEach(item => {
-        historieDiv.innerHTML += `<p>${item}</p>`;
+function aktualisiereAktienListe() {
+    const aktienListe = document.getElementById('aktien-liste');
+    aktienListe.innerHTML = '';
+    aktien.forEach((aktie, index) => {
+        aktienListe.innerHTML += `
+            <tr>
+                <td>${aktie.name}</td>
+                <td>${aktie.preis} €</td>
+                <td>${aktie.besitz}</td>
+            </tr>
+        `;
     });
 }
 
 document.getElementById('kaufen').addEventListener('click', function() {
-    if (geld >= aktienPreis) {
-        geld -= aktienPreis;
-        aktienBesitz += 1;
-        let transaktion = `Aktie gekauft für ${aktienPreis} €`;
-        aktienPreis = Math.floor(Math.random() * 20) + 5; // Preis zwischen 5 und 25
-        aktualisiereNachricht();
-        aktualisiereHistorie(transaktion);
-        alert(`Du hast 1 Aktie gekauft! Neuer Preis: ${aktienPreis} €`);
-    } else {
-        document.getElementById('nachricht').textContent = 'Nicht genug Geld!';
-    }
+    const anzahl = parseInt(document.getElementById('anzahl').value);
+    aktien.forEach(aktie => {
+        if (geld >= aktie.preis * anzahl) {
+            geld -= aktie.preis * anzahl;
+            aktie.besitz += anzahl;
+            alert(`Du hast ${anzahl} Aktien von ${aktie.name} gekauft!`);
+            aktualisiereNachricht();
+            aktualisiereAktienListe();
+        } else {
+            alert(`Nicht genug Geld für ${anzahl} Aktien von ${aktie.name}!`);
+        }
+    });
 });
 
 document.getElementById('verkaufen').addEventListener('click', function() {
-    if (aktienBesitz > 0) {
-        geld += aktienPreis;
-        aktienBesitz -= 1;
-        let transaktion = `Aktie verkauft für ${aktienPreis} €`;
-        aktienPreis = Math.floor(Math.random() * 20) + 5; // Preis zwischen 5 und 25
-        aktualisiereNachricht();
-        aktualisiereHistorie(transaktion);
-        alert(`Du hast 1 Aktie verkauft! Neuer Preis: ${aktienPreis} €`);
-    } else {
-        document.getElementById('nachricht').textContent = 'Keine Aktien zum Verkaufen!';
-    }
+    const anzahl = parseInt(document.getElementById('anzahl').value);
+    aktien.forEach(aktie => {
+        if (aktie.besitz >= anzahl) {
+            geld += aktie.preis * anzahl;
+            aktie.besitz -= anzahl;
+            alert(`Du hast ${anzahl} Aktien von ${aktie.name} verkauft!`);
+            aktualisiereNachricht();
+            aktualisiereAktienListe();
+        } else {
+            alert(`Nicht genug Aktien von ${aktie.name} zum Verkaufen!`);
+        }
+    });
 });
 
-// Initiale Anzeige der Nachricht
+// Initiale Anzeige
 aktualisiereNachricht();
+aktualisiereAktienListe();
+
