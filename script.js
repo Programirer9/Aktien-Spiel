@@ -1,20 +1,24 @@
-let geld = 1000; // Höheres Anfangsbudget
+let geld = 1000; // Anfangsbudget
 let geliehen = 0; // Geliehenes Geld
-let zinsen = 0.07; // 7% Zinsen auf geliehenes Geld
 let aktien = [
     { name: "Tech Corp", preis: 50, besitz: 0, dividende: Math.random() * 0.06 },
     { name: "Health Inc.", preis: 75, besitz: 0, dividende: Math.random() * 0.06 },
     { name: "Finance Ltd.", preis: 100, besitz: 0, dividende: Math.random() * 0.06 },
     { name: "Energy Co.", preis: 60, besitz: 0, dividende: Math.random() * 0.06 },
     { name: "Auto GmbH", preis: 80, besitz: 0, dividende: Math.random() * 0.06 },
-    { name: "Retail AG", preis: 90, besitz: 0, dividende: Math.random() * 0.06 }, // Neue Aktie
-    { name: "Travel Inc.", preis: 70, besitz: 0, dividende: Math.random() * 0.06 }, // Neue Aktie
-    { name: "Biotech Ltd.", preis: 120, besitz: 0, dividende: Math.random() * 0.06 }, // Neue Aktie
-    { name: "Real Estate Co.", preis: 95, besitz: 0, dividende: Math.random() * 0.06 } // Neue Aktie
+    { name: "Retail AG", preis: 90, besitz: 0, dividende: Math.random() * 0.06 },
+    { name: "Food Inc.", preis: 70, besitz: 0, dividende: Math.random() * 0.06 },
+    { name: "Travel Co.", preis: 55, besitz: 0, dividende: Math.random() * 0.06 }
 ];
 
-let krisenAktiv = false; 
-let berichtGekauft = false; 
+let krisenAktiv = false; // Flag für Krisen
+let berichtGekauft = false; // Flag für den Bericht
+let ziel = 10000; // Zielbetrag
+let zeit = 20 * 60 * 1000; // 20 Minuten in Millisekunden
+let krisenIntervall = 15000; // Krisen alle 15 Sekunden
+let zinsSatz = 0.07; // 7% Zinsen
+let ratenzahlungAktiv = false; // Ratenzahlung aktiv
+let ratenBetrag = 0; // Betrag der Ratenzahlung
 
 function aktualisiereNachricht() {
     document.getElementById('nachricht').textContent = 
@@ -45,49 +49,57 @@ function ladeAktienAuswahl() {
     });
 }
 
-document.getElementById('kaufen').addEventListener('click', function() {
-    const aktieName = document.getElementById('aktie-auswahl').value;
-    const anzahl = parseInt(document.getElementById('anzahl').value);
-    const aktie = aktien.find(a => a.name === aktieName);
-    
-    const gebuehr = 0.02 * (aktie.preis * anzahl); // 2% Kaufgebühr
-    const gesamtKosten = aktie.preis * anzahl + gebuehr;
+function simuliereKrise() {
+    krisenAktiv = true;
+    aktien.forEach(aktie => {
+        const prozentsatz = Math.random() * (0.4 - 0.1) + 0.1; // Unterschiedliche Rückgänge zwischen 10% und 40%
+        aktie.preis *= (1 - prozentsatz);
+        aktie.preis = Math.max(aktie.preis, 5); // Preis nicht unter 5 Euro
+    });
+    alert("Eine Krise ist eingetreten! Aktienpreise sind gefallen.");
+    aktualisiereAktienListe();
+}
 
-    if (geld >= gesamtKosten) {
-        geld -= gesamtKosten;
-        aktie.besitz += anzahl;
-        alert(`Du hast ${anzahl} Aktien von ${aktie.name} gekauft! Gesamtkosten: ${gesamtKosten.toFixed(2)} €`);
+// Häufigere Krisen simulieren
+setInterval(simuliereKrise, krisenIntervall);
+
+// Ratenzahlung für geliehenes Geld
+function ratenzahlung() {
+    if (geliehen > 0 && geld >= ratenBetrag) {
+        geld -= ratenBetrag;
+        geliehen -= ratenBetrag;
+        alert(`Du hast ${ratenBetrag.toFixed(2)} € an die Bank zurückgezahlt.`);
         aktualisiereNachricht();
-        aktualisiereAktienListe();
+    }
+}
+
+document.getElementById('bank-leihen').addEventListener('click', function() {
+    let betrag = parseFloat(prompt("Wie viel Geld möchtest du leihen? (max. 1000 €)"));
+    if (betrag <= 1000 && betrag > 0) {
+        geld += betrag;
+        geliehen += betrag * (1 + zinsSatz); // Zinsen hinzufügen
+        alert(`Du hast ${betrag.toFixed(2)} € von der Bank geliehen.`);
+        ratenBetrag = betrag / 5; // Beispiel: In 5 Raten zurückzahlen
     } else {
-        alert(`Nicht genug Geld für ${anzahl} Aktien von ${aktie.name}!`);
+        alert("Ungültiger Betrag! Bitte einen Betrag bis 1000 € wählen.");
     }
 });
 
-document.getElementById('verkaufen').addEventListener('click', function() {
-    const aktieName = document.getElementById('aktie-auswahl').value;
-    const anzahl = parseInt(document.getElementById('anzahl').value);
-    const aktie = aktien.find(a => a.name === aktieName);
-    
-    const gebuehr = 0.02 * (aktie.preis * anzahl); // 2% Verkaufsgebühr
-    const gesamtEinnahmen = aktie.preis * anzahl - gebuehr;
-
-    if (aktie.besitz >= anzahl) {
-        geld += gesamtEinnahmen;
-        aktie.besitz -= anzahl;
-        alert(`Du hast ${anzahl} Aktien von ${aktie.name} verkauft! Einnahmen: ${gesamtEinnahmen.toFixed(2)} €`);
-        aktualisiereNachricht();
-        aktualisiereAktienListe();
+// Ziel innerhalb der Zeit erreichen
+setTimeout(() => {
+    if (geld >= ziel) {
+        alert("Herzlichen Glückwunsch! Du hast das Ziel erreicht!");
     } else {
-        alert(`Nicht genug Aktien von ${aktie.name} zum Verkaufen!`);
+        alert("Leider hast du das Ziel nicht erreicht. Versuch es noch einmal!");
     }
-});
+}, zeit);
 
+// Berichte verbessern
 document.getElementById('bericht').addEventListener('click', function() {
     if (geld >= 50) {
         geld -= 50;
         berichtGekauft = true;
-        const berichtText = "Der Bericht zeigt aktuelle Marktanalysen und Trends.";
+        const berichtText = "Aktien von Tech Corp könnten aufgrund neuer Technologien steigen. Health Inc. ist volatil, während Finance Ltd. von neuen Regelungen profitieren könnte.";
         document.getElementById('bericht-anzeige').textContent = berichtText;
         alert("Bericht gekauft! Schau dir den Bericht an.");
         aktualisiereNachricht();
@@ -95,53 +107,6 @@ document.getElementById('bericht').addEventListener('click', function() {
         alert("Nicht genug Geld für den Bericht!");
     }
 });
-
-document.getElementById('bank-leihen').addEventListener('click', function() {
-    let leihBetrag = prompt("Wie viel Geld möchtest du leihen? (max. 1000 €)");
-    leihBetrag = parseFloat(leihBetrag);
-    if (leihBetrag > 0 && leihBetrag <= 1000) {
-        geld += leihBetrag;
-        geliehen += leihBetrag;
-        alert(`Du hast ${leihBetrag.toFixed(2)} € von der Bank geliehen.`);
-        setTimeout(zurueckzahlen, 30000); // Rückzahlung nach 30 Sekunden
-    } else {
-        alert("Bitte gib einen gültigen Betrag ein (1-1000 €).");
-    }
-    aktualisiereNachricht();
-});
-
-function zurueckzahlen() {
-    if (geliehen > 0) {
-        let rueckzahlBetrag = geliehen * (1 + zinsen); // Zinsen einrechnen
-        geld -= rueckzahlBetrag;
-        geliehen = 0; // Geld gilt als zurückgezahlt
-        alert(`Du hast ${rueckzahlBetrag.toFixed(2)} € an die Bank zurückgezahlt.`);
-        aktualisiereNachricht();
-    }
-}
-
-function simuliereKrise() {
-    const krisenProzentsatz = Math.random() * (20 - 10) + 10; // Zufälliger Preisverfall zwischen 10% und 20%
-    aktien.forEach(aktie => {
-        aktie.preis *= (1 - krisenProzentsatz / 100);
-        aktie.preis = Math.max(aktie.preis, 5); // Preis kann nicht unter 5 € sinken
-    });
-    alert(`Eine Krise ist eingetreten! Aktienpreise sind um ${krisenProzentsatz.toFixed(2)}% gefallen.`);
-    aktualisiereAktienListe();
-}
-
-// Aktienpreise regelmäßig aktualisieren
-function aktualisiereAktienpreise() {
-    aktien.forEach(aktie => {
-        const aenderung = (Math.random() < 0.5 ? -1 : 1) * (Math.random() * 10); // Zufällige Änderung zwischen -10 und +10
-        aktie.preis = Math.max(5, aktie.preis + aenderung); // Preis nicht unter 5 € lassen
-    });
-    aktualisiereAktienListe();
-}
-
-// Simuliere Krisen und aktualisiere Aktienpreise regelmäßig
-setTimeout(simuliereKrise, 30000); // 30 Sekunden nach dem Start
-setInterval(aktualisiereAktienpreise, 30000); // Aktienpreise alle 30 Sekunden aktualisieren
 
 // Initiale Anzeige
 ladeAktienAuswahl();
