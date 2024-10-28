@@ -1,16 +1,20 @@
-let geld = 1000;
-let geliehen = 0; 
+let geld = 1000; // Höheres Anfangsbudget
+let geliehen = 0; // Geliehenes Geld
+let zinsen = 0.07; // 7% Zinsen auf geliehenes Geld
 let aktien = [
     { name: "Tech Corp", preis: 50, besitz: 0, dividende: Math.random() * 0.06 },
     { name: "Health Inc.", preis: 75, besitz: 0, dividende: Math.random() * 0.06 },
     { name: "Finance Ltd.", preis: 100, besitz: 0, dividende: Math.random() * 0.06 },
     { name: "Energy Co.", preis: 60, besitz: 0, dividende: Math.random() * 0.06 },
-    { name: "Auto GmbH", preis: 80, besitz: 0, dividende: Math.random() * 0.06 }
+    { name: "Auto GmbH", preis: 80, besitz: 0, dividende: Math.random() * 0.06 },
+    { name: "Retail AG", preis: 90, besitz: 0, dividende: Math.random() * 0.06 }, // Neue Aktie
+    { name: "Travel Inc.", preis: 70, besitz: 0, dividende: Math.random() * 0.06 }, // Neue Aktie
+    { name: "Biotech Ltd.", preis: 120, besitz: 0, dividende: Math.random() * 0.06 }, // Neue Aktie
+    { name: "Real Estate Co.", preis: 95, besitz: 0, dividende: Math.random() * 0.06 } // Neue Aktie
 ];
 
 let krisenAktiv = false; 
 let berichtGekauft = false; 
-let zinsen = 0.1; // 10% Zinsen auf geliehenes Geld
 
 function aktualisiereNachricht() {
     document.getElementById('nachricht').textContent = 
@@ -41,7 +45,7 @@ function simuliereKrise() {
     aktualisiereAktienListe();
 }
 
-// Ein Bericht, der regelmäßig aktualisiert werden kann
+// Bericht kaufen
 document.getElementById('bericht').addEventListener('click', function() {
     if (geld >= 50) {
         geld -= 50;
@@ -55,17 +59,17 @@ document.getElementById('bericht').addEventListener('click', function() {
     }
 });
 
-// Geld leihen, wobei der Benutzer den Betrag bestimmt
+// Geld leihen, maximal 1000 €
 document.getElementById('bank-leihen').addEventListener('click', function() {
-    let leihBetrag = prompt("Wie viel Geld möchtest du leihen? (max. 100 €)");
+    let leihBetrag = prompt("Wie viel Geld möchtest du leihen? (max. 1000 €)");
     leihBetrag = parseFloat(leihBetrag);
-    if (leihBetrag > 0 && leihBetrag <= 100) {
+    if (leihBetrag > 0 && leihBetrag <= 1000) {
         geld += leihBetrag;
         geliehen += leihBetrag;
         alert(`Du hast ${leihBetrag.toFixed(2)} € von der Bank geliehen.`);
         setTimeout(zurueckzahlen, 30000); // Rückzahlung nach 30 Sekunden
     } else {
-        alert("Bitte gib einen gültigen Betrag ein (1-100 €).");
+        alert("Bitte gib einen gültigen Betrag ein (1-1000 €).");
     }
     aktualisiereNachricht();
 });
