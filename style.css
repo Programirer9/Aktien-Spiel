@@ -1,64 +1,51 @@
 body {
-    font-family: 'Arial', sans-serif;
-    background-color: #f0f0f0;
+    font-family: Arial, sans-serif;
+    background-color: #f4f4f4;
     color: #333;
     text-align: center;
-    margin: 0;
 }
 
 .container {
-    max-width: 800px;
+    max-width: 600px;
     margin: 50px auto;
-    padding: 30px;
-    background: linear-gradient(135deg, #ffffff, #e0e0e0);
-    border-radius: 12px;
-    box-shadow: 0 5px 20px rgba(0, 0, 0, 0.1);
+    padding: 20px;
+    background: white;
+    border-radius: 8px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
 }
 
 h1 {
     color: #4CAF50;
-    font-size: 2.5em;
-    margin-bottom: 20px;
 }
 
 .message {
-    font-size: 1.5em;
-    margin: 20px 0;
-    background: rgba(255, 255, 255, 0.8);
-    padding: 10px;
-    border-radius: 8px;
+    font-size: 1.2em;
+    margin-bottom: 20px;
 }
 
 .controls {
     margin-bottom: 20px;
-    display: flex;
-    justify-content: center;
-    flex-wrap: wrap;
 }
 
 input {
-    padding: 12px;
-    width: 120px;
-    margin: 0 10px;
-    border: 1px solid #4CAF50;
-    border-radius: 5px;
+    padding: 10px;
+    width: 100px;
+    margin-right: 10px;
 }
 
 button {
-    padding: 12px 20px;
+    padding: 10px 15px;
     margin: 5px;
     border: none;
     border-radius: 5px;
     background-color: #4CAF50;
     color: white;
     cursor: pointer;
-    font-weight: bold;
-    transition: background-color 0.3s, transform 0.2s;
+    transition: background-color 0.3s;
 }
 
 button:hover {
     background-color: #45a049;
-    transform: scale(1.05);
 }
 
 table {
@@ -68,31 +55,18 @@ table {
 }
 
 th, td {
-    padding: 12px;
+    padding: 10px;
     border: 1px solid #ddd;
 }
 
 th {
     background-color: #4CAF50;
     color: white;
-    text-transform: uppercase;
-}
-
-td {
-    background-color: rgba(255, 255, 255, 0.9);
 }
 
 .bericht {
     margin-top: 20px;
-    padding: 15px;
+    padding: 10px;
     border: 1px solid #ddd;
-    background-color: #fafafa;
-    border-radius: 8px;
-    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
-}
-
-footer {
-    margin-top: 40px;
-    font-size: 0.9em;
-    color: #777;
+    background-color: #f9f9f9;
 }
