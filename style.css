@@ -69,3 +69,17 @@ th {
     border: 1px solid #ddd;
     background-color: #f9f9f9;
 }
+@media (max-width: 600px) {
+    .container {
+        padding: 10px;
+    }
+
+    input {
+        width: 80%; /* Breite anpassen */
+    }
+
+    button {
+        width: 100%; /* Knöpfe über die gesamte Breite */
+        margin: 10px 0; /* Abstand zwischen Knöpfen */
+    }
+}
