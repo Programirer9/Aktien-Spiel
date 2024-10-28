@@ -35,17 +35,54 @@ function aktualisiereAktienListe() {
     });
 }
 
-function simuliereKrise() {
-    const krisenProzentsatz = Math.random() * (20 - 10) + 10; // Zufälliger Preisverfall zwischen 10% und 20%
-    aktien.forEach(aktie => {
-        aktie.preis *= (1 - krisenProzentsatz / 100);
-        aktie.preis = Math.max(aktie.preis, 5); // Preis kann nicht unter 5 € sinken
+function ladeAktienAuswahl() {
+    const auswahl = document.getElementById('aktie-auswahl');
+    aktien.forEach((aktie) => {
+        const option = document.createElement('option');
+        option.value = aktie.name;
+        option.textContent = aktie.name;
+        auswahl.appendChild(option);
     });
-    alert(`Eine Krise ist eingetreten! Aktienpreise sind um ${krisenProzentsatz.toFixed(2)}% gefallen.`);
-    aktualisiereAktienListe();
 }
 
-// Bericht kaufen
+document.getElementById('kaufen').addEventListener('click', function() {
+    const aktieName = document.getElementById('aktie-auswahl').value;
+    const anzahl = parseInt(document.getElementById('anzahl').value);
+    const aktie = aktien.find(a => a.name === aktieName);
+    
+    const gebuehr = 0.02 * (aktie.preis * anzahl); // 2% Kaufgebühr
+    const gesamtKosten = aktie.preis * anzahl + gebuehr;
+
+    if (geld >= gesamtKosten) {
+        geld -= gesamtKosten;
+        aktie.besitz += anzahl;
+        alert(`Du hast ${anzahl} Aktien von ${aktie.name} gekauft! Gesamtkosten: ${gesamtKosten.toFixed(2)} €`);
+        aktualisiereNachricht();
+        aktualisiereAktienListe();
+    } else {
+        alert(`Nicht genug Geld für ${anzahl} Aktien von ${aktie.name}!`);
+    }
+});
+
+document.getElementById('verkaufen').addEventListener('click', function() {
+    const aktieName = document.getElementById('aktie-auswahl').value;
+    const anzahl = parseInt(document.getElementById('anzahl').value);
+    const aktie = aktien.find(a => a.name === aktieName);
+    
+    const gebuehr = 0.02 * (aktie.preis * anzahl); // 2% Verkaufsgebühr
+    const gesamtEinnahmen = aktie.preis * anzahl - gebuehr;
+
+    if (aktie.besitz >= anzahl) {
+        geld += gesamtEinnahmen;
+        aktie.besitz -= anzahl;
+        alert(`Du hast ${anzahl} Aktien von ${aktie.name} verkauft! Einnahmen: ${gesamtEinnahmen.toFixed(2)} €`);
+        aktualisiereNachricht();
+        aktualisiereAktienListe();
+    } else {
+        alert(`Nicht genug Aktien von ${aktie.name} zum Verkaufen!`);
+    }
+});
+
 document.getElementById('bericht').addEventListener('click', function() {
     if (geld >= 50) {
         geld -= 50;
@@ -59,7 +96,6 @@ document.getElementById('bericht').addEventListener('click', function() {
     }
 });
 
-// Geld leihen, maximal 1000 €
 document.getElementById('bank-leihen').addEventListener('click', function() {
     let leihBetrag = prompt("Wie viel Geld möchtest du leihen? (max. 1000 €)");
     leihBetrag = parseFloat(leihBetrag);
@@ -84,7 +120,17 @@ function zurueckzahlen() {
     }
 }
 
-// Zufällige Kursänderungen
+function simuliereKrise() {
+    const krisenProzentsatz = Math.random() * (20 - 10) + 10; // Zufälliger Preisverfall zwischen 10% und 20%
+    aktien.forEach(aktie => {
+        aktie.preis *= (1 - krisenProzentsatz / 100);
+        aktie.preis = Math.max(aktie.preis, 5); // Preis kann nicht unter 5 € sinken
+    });
+    alert(`Eine Krise ist eingetreten! Aktienpreise sind um ${krisenProzentsatz.toFixed(2)}% gefallen.`);
+    aktualisiereAktienListe();
+}
+
+// Aktienpreise regelmäßig aktualisieren
 function aktualisiereAktienpreise() {
     aktien.forEach(aktie => {
         const aenderung = (Math.random() < 0.5 ? -1 : 1) * (Math.random() * 10); // Zufällige Änderung zwischen -10 und +10
@@ -98,5 +144,6 @@ setTimeout(simuliereKrise, 30000); // 30 Sekunden nach dem Start
 setInterval(aktualisiereAktienpreise, 30000); // Aktienpreise alle 30 Sekunden aktualisieren
 
 // Initiale Anzeige
+ladeAktienAuswahl();
 aktualisiereNachricht();
 aktualisiereAktienListe();
