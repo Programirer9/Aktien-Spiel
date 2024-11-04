@@ -32,7 +32,6 @@ function aktualisiereAktienListe() {
         `;
     });
 }
-
 function ladeAktienAuswahl() {
     const auswahl = document.getElementById('aktie-auswahl');
     aktien.forEach((aktie) => {
