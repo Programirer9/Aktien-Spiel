@@ -147,3 +147,37 @@ setInterval(simulierePleite, 120000); // Alle 2 Minuten
 ladeAktienAuswahl();
 aktualisiereNachricht();
 aktualisiereAktienListe();
+let einnahmen = [];
+let ausgaben = [];
+
+function speichereEinnahme(betrag) {
+    einnahmen.push(betrag);
+}
+
+function speichereAusgabe(betrag) {
+    ausgaben.push(betrag);
+}
+document.getElementById('bericht').addEventListener('click', function() {
+    // Bericht kaufen
+    if (geld >= 50) {
+        geld -= 50;
+        speichereAusgabe(50);
+        const berichtText = "Die Märkte zeigen Anzeichen von Stabilität. Tech-Aktien könnten steigen.";
+        document.getElementById('bericht-anzeige').textContent = berichtText;
+        alert("Bericht gekauft! Schau dir den Bericht an.");
+        aktualisiereNachricht();
+    } else {
+        alert("Nicht genug Geld für den Bericht!");
+    }
+});
+document.getElementById('ausgaben-einnahmen').addEventListener('click', function() {
+    const ausgabenText = `Ausgaben: ${ausgaben.join(', ') || 'Keine Ausgaben'}`;
+    const einnahmenText = `Einnahmen: ${einnahmen.join(', ') || 'Keine Einnahmen'}`;
+    alert(`${ausgabenText}\n${einnahmenText}`);
+});
+function generiereBericht() {
+    const berichtText = "Die Märkte sind volatil, investiere vorsichtig!";
+    document.getElementById('bericht-anzeige').textContent = berichtText;
+}
+
+setInterval(generiereBericht, 60000); // Bericht jede Minute
