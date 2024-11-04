@@ -41,8 +41,18 @@ function ladeAktienAuswahl() {
         option.textContent = aktie.name;
         auswahl.appendChild(option);
     });
+let einnahmen = []; // Array für Einnahmen
+let ausgaben = []; // Array für Ausgaben
+
+function speichereEinnahme(betrag) {
+    einnahmen.push(betrag);
 }
 
+function speichereAusgabe(betrag) {
+    ausgaben.push(betrag);
+}
+
+// Event Listener für den Kauf
 document.getElementById('kaufen').addEventListener('click', function() {
     const aktieName = document.getElementById('aktie-auswahl').value;
     const anzahl = parseInt(document.getElementById('anzahl').value);
@@ -62,6 +72,7 @@ document.getElementById('kaufen').addEventListener('click', function() {
     }
 });
 
+// Event Listener für den Verkauf
 document.getElementById('verkaufen').addEventListener('click', function() {
     const aktieName = document.getElementById('aktie-auswahl').value;
     const anzahl = parseInt(document.getElementById('anzahl').value);
@@ -79,6 +90,14 @@ document.getElementById('verkaufen').addEventListener('click', function() {
         alert(`Nicht genug Aktien von ${aktie.name} zum Verkaufen!`);
     }
 });
+
+// Event Listener für Einnahmen/Ausgaben anzeigen
+document.getElementById('ausgaben-einnahmen').addEventListener('click', function() {
+    const ausgabenText = ausgaben.length > 0 ? `Ausgaben: ${ausgaben.reduce((a, b) => a + b, 0)} €` : 'Keine Ausgaben';
+    const einnahmenText = einnahmen.length > 0 ? `Einnahmen: ${einnahmen.reduce((a, b) => a + b, 0)} €` : 'Keine Einnahmen';
+    alert(`${ausgabenText}\n${einnahmenText}`);
+});
+
 
 document.getElementById('bericht').addEventListener('click', function() {
     if (geld >= 50) {
