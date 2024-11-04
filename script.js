@@ -1,5 +1,8 @@
 let geld = 1000; 
 let geliehen = 0; 
+let einnahmen = []; // Array für Einnahmen
+let ausgaben = []; // Array für Ausgaben
+
 let aktien = [
     { name: "Tech Corp", preis: 50, besitz: 0 },
     { name: "Health Inc.", preis: 75, besitz: 0 },
@@ -16,20 +19,20 @@ let berichtGekauft = false;
 
 function aktualisiereNachricht() {
     document.getElementById('nachricht').textContent = 
-        Geld: ${geld.toFixed(2)} € | Geliehen: ${geliehen.toFixed(2)} €;
+        `Geld: ${geld.toFixed(2)} € | Geliehen: ${geliehen.toFixed(2)} €`;
 }
 
 function aktualisiereAktienListe() {
     const aktienListe = document.getElementById('aktien-liste');
     aktienListe.innerHTML = '';
     aktien.forEach((aktie) => {
-        aktienListe.innerHTML += 
+        aktienListe.innerHTML += `
             <tr>
                 <td>${aktie.name}</td>
                 <td>${aktie.preis.toFixed(2)} €</td>
                 <td>${aktie.besitz}</td>
             </tr>
-        ;
+        `;
     });
 }
 
@@ -43,6 +46,14 @@ function ladeAktienAuswahl() {
     });
 }
 
+function speichereEinnahme(betrag) {
+    einnahmen.push(betrag);
+}
+
+function speichereAusgabe(betrag) {
+    ausgaben.push(betrag);
+}
+
 document.getElementById('kaufen').addEventListener('click', function() {
     const aktieName = document.getElementById('aktie-auswahl').value;
     const anzahl = parseInt(document.getElementById('anzahl').value);
@@ -53,11 +64,12 @@ document.getElementById('kaufen').addEventListener('click', function() {
     if (geld >= gesamtKosten) {
         geld -= gesamtKosten;
         aktie.besitz += anzahl;
-        alert(Du hast ${anzahl} Aktien von ${aktie.name} gekauft!);
+        speichereAusgabe(gesamtKosten); // Ausgabe speichern
+        alert(`Du hast ${anzahl} Aktien von ${aktie.name} gekauft!`);
         aktualisiereNachricht();
         aktualisiereAktienListe();
     } else {
-        alert(Nicht genug Geld für ${anzahl} Aktien von ${aktie.name}!);
+        alert(`Nicht genug Geld für ${anzahl} Aktien von ${aktie.name}!`);
     }
 });
 
@@ -67,13 +79,15 @@ document.getElementById('verkaufen').addEventListener('click', function() {
     const aktie = aktien.find(a => a.name === aktieName);
     
     if (aktie.besitz >= anzahl) {
-        geld += aktie.preis * anzahl;
+        const gesamtEinnahme = aktie.preis * anzahl;
+        geld += gesamtEinnahme;
         aktie.besitz -= anzahl;
-        alert(Du hast ${anzahl} Aktien von ${aktie.name} verkauft!);
+        speichereEinnahme(gesamtEinnahme); // Einnahme speichern
+        alert(`Du hast ${anzahl} Aktien von ${aktie.name} verkauft!`);
         aktualisiereNachricht();
         aktualisiereAktienListe();
     } else {
-        alert(Nicht genug Aktien von ${aktie.name} zum Verkaufen!);
+        alert(`Nicht genug Aktien von ${aktie.name} zum Verkaufen!`);
     }
 });
 
@@ -95,7 +109,7 @@ document.getElementById('bank-leihen').addEventListener('click', function() {
     if (leihbetrag > 0 && leihbetrag <= 1000 && geliehen + leihbetrag <= 1000) {
         geld += leihbetrag;
         geliehen += leihbetrag;
-        alert(Du hast ${leihbetrag} € von der Bank geliehen. Zinsen: 7%);
+        alert(`Du hast ${leihbetrag} € von der Bank geliehen. Zinsen: 7%`);
         setTimeout(zurueckzahlen, 30000); // Rückzahlung nach 30 Sekunden
     } else {
         alert("Ungültiger Betrag!");
@@ -118,7 +132,7 @@ function simuliereKrise() {
         const verlust = Math.random() * (30 - 10) + 10; // Zufälliger Verlust zwischen 10% und 30%
         aktie.preis *= (1 - verlust / 100);
         if (aktie.preis < 10) {
-            alert(Achtung! ${aktie.name} ist unter 10 € gefallen. Dividende von 7% fällig.);
+            alert(`Achtung! ${aktie.name} ist unter 10 € gefallen. Dividende von 7% fällig.`);
         }
     });
     alert("Eine Krise ist eingetreten! Aktienpreise sind gefallen.");
@@ -137,6 +151,14 @@ function aktualisiereAktienpreise() {
 
 setInterval(aktualisiereAktienpreise, 30000);
 
+// Event Listener für Einnahmen/Ausgaben anzeigen
+document.getElementById('ausgaben-einnahmen').addEventListener('click', function() {
+    const ausgabenText = ausgaben.length > 0 ? `Ausgaben: ${ausgaben.reduce((a, b) => a + b, 0)} €` : 'Keine Ausgaben';
+    const einnahmenText = einnahmen.length > 0 ? `Einnahmen: ${einnahmen.reduce((a, b) => a + b, 0)} €` : 'Keine Einnahmen';
+    alert(`${ausgabenText}\n${einnahmenText}`);
+});
+
+// Initialisierung
 ladeAktienAuswahl();
 aktualisiereNachricht();
 aktualisiereAktienListe();
