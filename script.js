@@ -134,8 +134,15 @@ function aktualisiereAktienpreise() {
     });
     aktualisiereAktienListe();
 }
-
 setInterval(aktualisiereAktienpreise, 30000);
+function simulierePleite() {
+    const pleiteAktie = aktien[Math.floor(Math.random() * aktien.length)];
+    pleiteAktie.besitz = 0;
+    alert(`${pleiteAktie.name} ist pleite gegangen! Alle Aktien wurden verloren.`);
+    aktualisiereAktienListe();
+}
+
+setInterval(simulierePleite, 120000); // Alle 2 Minuten
 
 ladeAktienAuswahl();
 aktualisiereNachricht();
