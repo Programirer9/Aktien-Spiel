@@ -1,3 +1,4 @@
+console.log("Skript geladen");
 let geld = 1000; 
 let geliehen = 0; 
 let einnahmen = []; // Array für Einnahmen
