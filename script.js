@@ -157,17 +157,24 @@ function speichereEinnahme(betrag) {
 function speichereAusgabe(betrag) {
     ausgaben.push(betrag);
 }
-document.getElementById('bericht').addEventListener('click', function() {
-    // Bericht kaufen
-    if (geld >= 50) {
-        geld -= 50;
-        speichereAusgabe(50);
-        const berichtText = "Die Märkte zeigen Anzeichen von Stabilität. Tech-Aktien könnten steigen.";
-        document.getElementById('bericht-anzeige').textContent = berichtText;
-        alert("Bericht gekauft! Schau dir den Bericht an.");
+document.getElementById('kaufen').addEventListener('click', function() {
+    const aktieName = document.getElementById('aktie-auswahl').value;
+    const anzahl = parseInt(document.getElementById('anzahl').value);
+    const aktie = aktien.find(a => a.name === aktieName);
+    
+    const gesamtKosten = aktie.preis * anzahl;
+
+    if (geld >= gesamtKosten) {
+        geld -= gesamtKosten;
+        aktie.besitz += anzahl;
+        speichereEinnahme(gesamtKosten); // Einnahme speichern
+        alert(`Du hast ${anzahl} Aktien von ${aktie.name} gekauft!`);
         aktualisiereNachricht();
+        aktualisiereAktienListe();
     } else {
-        alert("Nicht genug Geld für den Bericht!");
+        alert(`Nicht genug Geld für ${anzahl} Aktien von ${aktie.name}!`);
+    }
+});
     }
 });
 document.getElementById('ausgaben-einnahmen').addEventListener('click', function() {
