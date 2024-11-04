@@ -179,5 +179,10 @@ function generiereBericht() {
     const berichtText = "Die Märkte sind volatil, investiere vorsichtig!";
     document.getElementById('bericht-anzeige').textContent = berichtText;
 }
+document.getElementById('ausgaben-einnahmen').addEventListener('click', function() {
+    const ausgabenText = ausgaben.length > 0 ? `Ausgaben: ${ausgaben.join(', ')} €` : 'Keine Ausgaben';
+    const einnahmenText = einnahmen.length > 0 ? `Einnahmen: ${einnahmen.join(', ')} €` : 'Keine Einnahmen';
+    alert(`${ausgabenText}\n${einnahmenText}`);
+});
 
 setInterval(generiereBericht, 60000); // Bericht jede Minute
