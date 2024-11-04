@@ -42,6 +42,7 @@ function ladeAktienAuswahl() {
         auswahl.appendChild(option);
     });
 }
+
 document.getElementById('kaufen').addEventListener('click', function() {
     const aktieName = document.getElementById('aktie-auswahl').value;
     const anzahl = parseInt(document.getElementById('anzahl').value);
