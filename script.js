@@ -42,7 +42,6 @@ function ladeAktienAuswahl() {
         auswahl.appendChild(option);
     });
 }
-
 document.getElementById('kaufen').addEventListener('click', function() {
     const aktieName = document.getElementById('aktie-auswahl').value;
     const anzahl = parseInt(document.getElementById('anzahl').value);
@@ -53,6 +52,7 @@ document.getElementById('kaufen').addEventListener('click', function() {
     if (geld >= gesamtKosten) {
         geld -= gesamtKosten;
         aktie.besitz += anzahl;
+        speichereAusgabe(gesamtKosten); // Ausgabe speichern
         alert(`Du hast ${anzahl} Aktien von ${aktie.name} gekauft!`);
         aktualisiereNachricht();
         aktualisiereAktienListe();
@@ -67,8 +67,10 @@ document.getElementById('verkaufen').addEventListener('click', function() {
     const aktie = aktien.find(a => a.name === aktieName);
     
     if (aktie.besitz >= anzahl) {
-        geld += aktie.preis * anzahl;
+        const gesamtEinnahme = aktie.preis * anzahl;
+        geld += gesamtEinnahme;
         aktie.besitz -= anzahl;
+        speichereEinnahme(gesamtEinnahme); // Einnahme speichern
         alert(`Du hast ${anzahl} Aktien von ${aktie.name} verkauft!`);
         aktualisiereNachricht();
         aktualisiereAktienListe();
