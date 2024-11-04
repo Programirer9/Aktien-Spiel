@@ -1,24 +1,32 @@
-body {
-    font-family: 'Arial', sans-serif;
-    background-color: #f0f0f0;
-    color: #333;
-    text-align: center;
-    margin: 0;
+table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 20px;
 }
 
-.container {
-    max-width: 800px;
-    margin: 50px auto;
-    padding: 30px;
-    background: linear-gradient(135deg, #ffffff, #e0e0e0);
-    border-radius: 12px;
-    box-shadow: 0 5px 20px rgba(0, 0, 0, 0.1);
+th, td {
+    padding: 12px;
+    border: 1px solid #ddd;
 }
 
-h1 {
-    color: #4CAF50;
-    font-size: 2.5em;
-    margin-bottom: 20px;
+th {
+    background-color: #4CAF50;
+    color: white;
+}
+
+button {
+    background-color: #4CAF50; /* Grüner Hintergrund */
+    color: white; /* Weißer Text */
+    border: none; /* Keine Ränder */
+    padding: 10px 20px; /* Polsterung */
+    margin: 5px; /* Abstand zwischen den Buttons */
+    border-radius: 5px; /* Abgerundete Ecken */
+    cursor: pointer; /* Zeiger für den Mauszeiger */
+    transition: background-color 0.3s; /* Sanfter Übergang bei Hover */
+}
+
+button:hover {
+    background-color: #45a049; /* Dunklerer Grünton bei Hover */
 }
 
 .message {
@@ -28,13 +36,3 @@ h1 {
     padding: 10px;
     border-radius: 8px;
 }
-
-.controls {
-    margin-bottom: 20px;
-    display: flex;
-    justify-content: center;
-    flex-wrap: wrap;
-}
-
-input {
-    padding
